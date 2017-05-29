@@ -1,0 +1,10 @@
+body {
+  background-image: url(http://www.fashion-euro.com/wp-content/uploads/2016/06/Best-Short-Hair-for-Women-Over-40.jpg);
+}
+
+p {
+  color: gold;
+  text-emphasis: filled;
+  text-shadow: 1px 1px 2px gray;
+  text-shadow: 2px 2px 2px red;
+}
