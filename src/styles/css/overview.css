@@ -10,11 +10,18 @@ p {
 }
 
 #navigation > nav > a {
+  color: springgreen;
+  text-emphasis: dotted;
+  text-shadow: 1px 1px 1px hotpink;
+}
+
+#navigation > nav > a:visited {
   color: hotpink;
   text-shadow: 1px 1px 2px gray;
+  text-shadow: -1px -1px 2px white;
 }
 
 #navigation > nav > a:hover {
   color: hotpink;
-  text-shadow: 1px 1px 2px gold;
+  text-shadow: -1px -1px 2px gold;
 }
