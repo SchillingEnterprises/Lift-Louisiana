@@ -2,6 +2,10 @@ body {
   background-image: url("../../img/jpg/Lift Louisiana.jpg");
 }
 
+#Header {
+    background:hotpink;
+}
+
 p {
   color: gold;
   text-emphasis: filled;
@@ -9,19 +13,19 @@ p {
   text-shadow: 2px 2px 2px red;
 }
 
-#navigation > nav > a {
+a.nav-link {
   color: springgreen;
   text-emphasis: dotted;
   text-shadow: 1px 1px 1px hotpink;
 }
 
-#navigation > nav > a:visited {
+a.nav-link:visited {
   color: hotpink;
   text-shadow: 1px 1px 2px gray;
   text-shadow: -1px -1px 2px white;
 }
 
-#navigation > nav > a:hover {
+a.nav-link:hover {
   color: hotpink;
   text-shadow: -1px -1px 2px gold;
 }
