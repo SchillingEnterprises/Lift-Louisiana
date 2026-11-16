@@ -37,6 +37,8 @@ class StaticSiteTests(unittest.TestCase):
 
     def test_entry_point_exists(self):
         self.assertTrue(self.index_path.is_file())
+        self.assertTrue((ROOT / "404.html").is_file())
+        self.assertTrue((ROOT / "robots.txt").is_file())
 
     def test_local_references_resolve(self):
         missing = [
@@ -62,6 +64,13 @@ class StaticSiteTests(unittest.TestCase):
 
     def test_all_images_have_alt_text(self):
         self.assertEqual(self.parser.images_without_alt, [])
+
+    def test_branded_404_has_accessible_landmarks_and_home_links(self):
+        page = (ROOT / "404.html").read_text(encoding="utf-8")
+        self.assertIn('<html lang="en">', page)
+        self.assertIn('<main id="main">', page)
+        self.assertIn('href="./index.html"', page)
+        self.assertIn("Page not found", page)
 
     def test_document_has_language_and_primary_landmarks(self):
         html = self.index_path.read_text(encoding="utf-8")
