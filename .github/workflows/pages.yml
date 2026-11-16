@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Validate JavaScript syntax
+        run: node --check src/js/site.js
       - name: Validate HTML asset references and accessibility basics
         run: python -m unittest discover -s tests -v
 
