@@ -45,6 +45,21 @@ class StaticSiteTests(unittest.TestCase):
         ]
         self.assertEqual(missing, [], f"Missing local assets: {missing}")
 
+
+    def test_mobile_navigation_has_accessible_control_relationship(self):
+        html = self.index_path.read_text(encoding="utf-8")
+        self.assertIn('aria-controls="primary-nav"', html)
+        self.assertIn('aria-expanded="false"', html)
+        self.assertIn('id="primary-nav"', html)
+        self.assertIn('class="sr-only">Open navigation</span>', html)
+
+    def test_mobile_navigation_supports_keyboard_dismissal_and_label_updates(self):
+        script = (ROOT / "src" / "js" / "site.js").read_text(encoding="utf-8")
+        self.assertIn('event.key === "Escape"', script)
+        self.assertIn('buttonLabel.textContent = "Close navigation"', script)
+        self.assertIn('buttonLabel.textContent = "Open navigation"', script)
+        self.assertIn('restoreFocus: true', script)
+
     def test_all_images_have_alt_text(self):
         self.assertEqual(self.parser.images_without_alt, [])
 
