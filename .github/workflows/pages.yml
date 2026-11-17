@@ -45,10 +45,28 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Configure GitHub Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
-      - name: Upload site artifact
+      - name: Stage the public site only
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          for page in index.html 404.html robots.txt; do
+            test -f "$page"
+            cp "$page" dist/
+          done
+          test -d src
+          cp -R src dist/
+          test -f dist/index.html
+          test -f dist/404.html
+          test -f dist/src/styles/css/overview.css
+          test -f dist/src/js/site.js
+          test ! -e dist/.github
+          test ! -e dist/tests
+          test ! -e dist/README.md
+      - name: Upload approved site artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
-          path: .
+          path: dist
       - name: Deploy site
         id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
