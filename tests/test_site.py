@@ -50,6 +50,32 @@ class StaticSiteTests(unittest.TestCase):
         ]
         self.assertEqual(missing, [], f"Missing local assets: {missing}")
 
+    def test_stylesheet_local_asset_references_resolve(self):
+        import re
+
+        missing = []
+        stylesheets = sorted((ROOT / "src").rglob("*.css"))
+        self.assertTrue(stylesheets, "Expected at least one project stylesheet.")
+
+        for stylesheet in stylesheets:
+            source = stylesheet.read_text(encoding="utf-8")
+            for reference in re.findall(r"""url\(\s*(['"]?)(.*?)\1\s*\)""", source, re.IGNORECASE):
+                value = reference[1].strip()
+                parsed = urlparse(value)
+                if not value or parsed.scheme or value.startswith(("#", "//")):
+                    continue
+                target = (stylesheet.parent / unquote(parsed.path)).resolve()
+                if not target.is_file():
+                    missing.append(
+                        f"{stylesheet.relative_to(ROOT)} -> {value}"
+                    )
+
+        self.assertEqual(
+            missing,
+            [],
+            f"Missing local stylesheet assets: {missing}",
+        )
+
     def test_mobile_navigation_has_accessible_control_relationship(self):
         html = self.index_path.read_text(encoding="utf-8")
         self.assertIn('aria-controls="primary-nav"', html)
