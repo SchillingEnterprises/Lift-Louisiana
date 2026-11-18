@@ -15,6 +15,7 @@ class AssetParser(HTMLParser):
         super().__init__()
         self.local_assets = []
         self.images_without_alt = []
+        self.external_blank_links = []
 
     def handle_starttag(self, tag, attributes):
         attributes = dict(attributes)
@@ -25,6 +26,8 @@ class AssetParser(HTMLParser):
                 self.local_assets.append(unquote(value.split("?", 1)[0]))
         if tag == "img" and "alt" not in attributes:
             self.images_without_alt.append(attributes.get("src", "(unnamed image)"))
+        if tag == "a" and attributes.get("target", "").lower() == "_blank":
+            self.external_blank_links.append(attributes)
 
 
 class StaticSiteTests(unittest.TestCase):
@@ -47,7 +50,6 @@ class StaticSiteTests(unittest.TestCase):
         ]
         self.assertEqual(missing, [], f"Missing local assets: {missing}")
 
-
     def test_mobile_navigation_has_accessible_control_relationship(self):
         html = self.index_path.read_text(encoding="utf-8")
         self.assertIn('aria-controls="primary-nav"', html)
@@ -60,10 +62,22 @@ class StaticSiteTests(unittest.TestCase):
         self.assertIn('event.key === "Escape"', script)
         self.assertIn('buttonLabel.textContent = "Close navigation"', script)
         self.assertIn('buttonLabel.textContent = "Open navigation"', script)
-        self.assertIn('restoreFocus: true', script)
+        self.assertIn("restoreFocus: true", script)
 
     def test_all_images_have_alt_text(self):
         self.assertEqual(self.parser.images_without_alt, [])
+
+    def test_external_new_tab_links_prevent_opener_access(self):
+        failures = []
+        for link in self.parser.external_blank_links:
+            rel = set(link.get("rel", "").lower().split())
+            if not {"noopener", "noreferrer"}.issubset(rel):
+                failures.append(link.get("href", "(missing href)"))
+        self.assertEqual(
+            failures,
+            [],
+            f"External links opening new tabs need rel=noopener noreferrer: {failures}",
+        )
 
     def test_branded_404_has_accessible_landmarks_and_home_links(self):
         page = (ROOT / "404.html").read_text(encoding="utf-8")
