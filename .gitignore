@@ -1,0 +1,30 @@
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editors and IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Local development and generated output
+.env
+.env.*
+!.env.example
+!.env.*.example
+node_modules/
+coverage/
+.nyc_output/
+.cache/
+.sass-cache/
+*.log
+
+# Python test and bytecode artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
