@@ -59,7 +59,7 @@ class StaticSiteTests(unittest.TestCase):
 
         for stylesheet in stylesheets:
             source = stylesheet.read_text(encoding="utf-8")
-            for reference in re.findall(r"url\(\s*(['"]?)(.*?)\1\s*\)", source, re.IGNORECASE):
+            for reference in re.findall(r"""url\(\s*(['"]?)(.*?)\1\s*\)""", source, re.IGNORECASE):
                 value = reference[1].strip()
                 parsed = urlparse(value)
                 if not value or parsed.scheme or value.startswith(("#", "//")):
