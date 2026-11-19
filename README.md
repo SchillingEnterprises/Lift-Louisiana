@@ -20,7 +20,7 @@ Run the dependency-free asset and accessibility smoke tests:
 python -m unittest discover -s tests -v
 ```
 
-GitHub Actions runs these checks for pull requests and deploys the site to GitHub Pages after changes merge to `master`. In repository settings, select **Deploy from a branch → GitHub Actions** as the Pages build source if it is not already selected.
+GitHub Actions runs these checks for pull requests and deploys the site to GitHub Pages after changes merge to `master`. The deployment workflow publishes only the approved root files (`index.html`, `404.html`, and `robots.txt`) plus `src/`; tests, workflow files, and repository documentation are not copied into the published artifact. In repository settings, select **GitHub Actions** as the Pages build source if it is not already selected.
 
 ## Project notes
 
