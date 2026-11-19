@@ -29,3 +29,7 @@ GitHub Actions runs these checks for pull requests and deploys the site to GitHu
 - A branded `404.html` page handles unknown routes on GitHub Pages; `robots.txt` permits indexing of the public showcase.
 - External destinations remain external and open in a new tab.
 - No paid services or runtime dependencies are required.
+
+## Security
+
+See [SECURITY.md](SECURITY.md) for this repository's security, privacy, and responsible-use guidance.
