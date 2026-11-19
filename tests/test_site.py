@@ -123,6 +123,17 @@ class StaticSiteTests(unittest.TestCase):
         self.assertIn('href="./index.html"', page)
         self.assertIn("Page not found", page)
 
+
+    def test_all_html_documents_have_language_and_primary_landmarks(self):
+        pages = sorted(ROOT.glob("*.html"))
+        self.assertGreaterEqual(len(pages), 2, "Expected homepage and branded 404 page.")
+        for page_path in pages:
+            with self.subTest(page=page_path.name):
+                html = page_path.read_text(encoding="utf-8")
+                self.assertIn('<html lang="en">', html)
+                self.assertIn('<main id="main">', html)
+                self.assertIn('href="#main"', html)
+
     def test_document_has_language_and_primary_landmarks(self):
         html = self.index_path.read_text(encoding="utf-8")
         self.assertIn('<html lang="en">', html)
