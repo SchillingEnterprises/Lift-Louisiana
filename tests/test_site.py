@@ -50,6 +50,17 @@ class StaticSiteTests(unittest.TestCase):
         ]
         self.assertEqual(missing, [], f"Missing local assets: {missing}")
 
+    def test_404_page_local_references_resolve(self):
+        page = AssetParser()
+        page.feed((ROOT / "404.html").read_text(encoding="utf-8"))
+        missing = []
+        for reference in page.local_assets:
+            parsed = urlparse(reference)
+            target = ROOT / unquote(parsed.path).lstrip("/")
+            if not target.is_file():
+                missing.append(reference)
+        self.assertEqual(missing, [], f"Missing local 404-page references: {missing}")
+
     def test_stylesheet_local_asset_references_resolve(self):
         import re
 
