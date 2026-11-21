@@ -94,6 +94,13 @@ class StaticSiteTests(unittest.TestCase):
         self.assertIn('id="primary-nav"', html)
         self.assertIn('class="sr-only">Open navigation</span>', html)
 
+    def test_mobile_navigation_remains_available_without_javascript(self):
+        stylesheet = (ROOT / "src" / "styles" / "css" / "overview.css").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("html:not(.has-js) .primary-nav", stylesheet)
+        self.assertIn("html.has-js .primary-nav.is-open", stylesheet)
+
     def test_mobile_navigation_supports_keyboard_dismissal_and_label_updates(self):
         script = (ROOT / "src" / "js" / "site.js").read_text(encoding="utf-8")
         self.assertIn('event.key === "Escape"', script)

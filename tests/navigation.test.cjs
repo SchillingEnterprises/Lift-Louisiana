@@ -10,6 +10,7 @@ function createNavigationHarness() {
   const documentListeners = {};
   const buttonListeners = {};
   const navigationListeners = {};
+  const documentClasses = new Set();
   const attributes = { "aria-expanded": "false" };
   const classes = new Set();
   const label = { textContent: "Open navigation" };
@@ -34,6 +35,7 @@ function createNavigationHarness() {
   };
   const document = {
     addEventListener: (name, callback) => { documentListeners[name] = callback; },
+    documentElement: { classList: { add: (name) => documentClasses.add(name) } },
     getElementById: (id) => ({
       "menu-toggle": menuButton,
       "primary-nav": navigation,
@@ -50,6 +52,7 @@ function createNavigationHarness() {
   return {
     attributes,
     classes,
+    documentClasses,
     label,
     buttonListeners,
     navigationListeners,
@@ -64,6 +67,7 @@ test("mobile navigation updates expanded state and its screen-reader label", () 
   assert.equal(h.attributes["aria-expanded"], "true");
   assert.equal(h.label.textContent, "Close navigation");
   assert.equal(h.classes.has("is-open"), true);
+  assert.equal(h.documentClasses.has("has-js"), true);
 
   h.buttonListeners.click();
   assert.equal(h.attributes["aria-expanded"], "false");
