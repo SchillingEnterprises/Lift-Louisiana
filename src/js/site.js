@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!menuButton || !navigation) return;
 
+  document.documentElement.classList.add("has-js");
   const buttonLabel = menuButton.querySelector(".sr-only");
 
   const closeNavigation = ({ restoreFocus = false } = {}) => {
