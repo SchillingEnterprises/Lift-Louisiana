@@ -1,35 +1,61 @@
-# Lift Louisiana — responsive project showcase
+# Lift Louisiana
 
-This repository contains a static, responsive project page for Lift Louisiana.
+A responsive, static showcase for Lift Louisiana, focused on community, advocacy, and reproductive health care access in Louisiana. The site is built with HTML, CSS, and a small amount of vanilla JavaScript; it has no application backend, build step, or package installation.
 
 ## Run locally
 
-Open `index.html` in a browser or serve the repository root with any static file server, for example:
+Use Python's built-in static file server from the repository root:
 
 ```bash
 python -m http.server 8000
 ```
 
-Then visit `http://localhost:8000`.
+Open [http://localhost:8000](http://localhost:8000). You can also open `index.html` directly, though a local server more closely matches how the site is hosted.
 
-## Quality checks
+## Project structure
 
-Run the dependency-free asset and accessibility smoke tests:
+| Path | Purpose |
+| --- | --- |
+| `index.html` | Main showcase page and its content |
+| `404.html` | Branded not-found page for GitHub Pages |
+| `robots.txt` | Crawler policy for the public site |
+| `src/styles/css/overview.css` | Responsive layout, visual design, and motion preferences |
+| `src/js/site.js` | Progressive enhancement for the mobile navigation |
+| `src/img/` | Site imagery and favicon |
+| `tests/` | Dependency-free Python and Node.js regression tests |
+| `.github/workflows/pages.yml` | Validation and GitHub Pages deployment |
+
+## Validate changes
+
+The checks require Python 3 and Node.js. No packages need to be installed.
 
 ```bash
 python -m unittest discover -s tests -v
+node --test tests/navigation.test.cjs
+node --check src/js/site.js
 ```
 
-GitHub Actions runs these checks for pull requests and deploys the site to GitHub Pages after changes merge to `master`. The deployment workflow publishes only the approved root files (`index.html`, `404.html`, and `robots.txt`) plus `src/`; tests, workflow files, and repository documentation are not copied into the published artifact. In repository settings, select **GitHub Actions** as the Pages build source if it is not already selected.
+The Python tests check required pages, local HTML and stylesheet references, and accessibility and link-safety basics. The Node.js tests exercise the mobile navigation's open, close, Escape, focus-restoration, and link-activation behavior.
 
-## Project notes
+## Publish
 
-- Original local imagery and social links are preserved.
-- The page is static and does not contain a backend or collect visitor data.
-- A branded `404.html` page handles unknown routes on GitHub Pages; `robots.txt` permits indexing of the public showcase.
-- External destinations remain external and open in a new tab.
-- No paid services or runtime dependencies are required.
+GitHub Actions runs the validation checks for pull requests targeting `master`. A push to `master` runs the checks and, if they pass, deploys the site to GitHub Pages. The workflow stages only `index.html`, `404.html`, `robots.txt`, and `src/`; documentation, tests, and repository configuration are not published.
 
-## Security
+For the first deployment, set the repository's **Pages build and deployment** source to **GitHub Actions**. The workflow's deployment job is restricted to pushes to `master`; manually running the workflow performs validation but does not deploy.
 
-See [SECURITY.md](SECURITY.md) for this repository's security, privacy, and responsible-use guidance.
+## Editing guidance
+
+- Keep the page static and dependency-free unless a project requirement calls for otherwise.
+- Keep local links and asset paths relative so the site works on GitHub Pages.
+- Provide useful alternative text for informative images; mark decorative imagery as decorative.
+- Preserve keyboard navigation, visible focus, reduced-motion support, and the mobile menu's no-JavaScript fallback.
+- For links opening a new tab, retain `rel="noopener noreferrer"`.
+- Check permissions and accuracy before publishing third-party content, imagery, or external destinations.
+
+## Privacy and security
+
+The site has no first-party analytics, forms, accounts, or backend. The main page loads its typefaces from Google Fonts, and following external links contacts the linked service; those third parties may receive normal connection data from a visitor's browser. See [SECURITY.md](SECURITY.md) for security and reporting guidance.
+
+## License
+
+See [LICENSE](LICENSE) for the repository's license terms.
