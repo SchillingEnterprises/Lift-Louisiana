@@ -54,7 +54,7 @@ For the first deployment, set the repository's **Pages build and deployment** so
 
 ## Privacy and security
 
-The site has no first-party analytics, forms, accounts, or backend. The main page loads its typefaces from Google Fonts, and following external links contacts the linked service; those third parties may receive normal connection data from a visitor's browser. See [SECURITY.md](SECURITY.md) for security and reporting guidance.
+The site has no first-party analytics, forms, accounts, or backend. Its Content Security Policy blocks remote scripts and limits external page resources to Google Fonts stylesheets and font files. Following an external link contacts the linked service; those third parties may receive normal connection data from a visitor's browser. See [SECURITY.md](SECURITY.md) for security and reporting guidance.
 
 ## License
 
