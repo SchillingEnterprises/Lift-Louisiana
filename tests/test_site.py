@@ -16,6 +16,7 @@ class AssetParser(HTMLParser):
         self.local_assets = []
         self.images_without_alt = []
         self.external_blank_links = []
+        self.content_security_policies = []
 
     def handle_starttag(self, tag, attributes):
         attributes = dict(attributes)
@@ -26,6 +27,8 @@ class AssetParser(HTMLParser):
                 self.local_assets.append(unquote(value.split("?", 1)[0]))
         if tag == "img" and "alt" not in attributes:
             self.images_without_alt.append(attributes.get("src", "(unnamed image)"))
+        if tag == "meta" and attributes.get("http-equiv", "").lower() == "content-security-policy":
+            self.content_security_policies.append(attributes.get("content", ""))
         if tag == "a" and attributes.get("target", "").lower() == "_blank":
             self.external_blank_links.append(attributes)
 
@@ -85,6 +88,29 @@ class StaticSiteTests(unittest.TestCase):
             missing,
             [],
             f"Missing local stylesheet assets: {missing}",
+        )
+
+    def test_content_security_policy_limits_runtime_and_remote_resources(self):
+        self.assertEqual(len(self.parser.content_security_policies), 1)
+        directives = {}
+        for directive in self.parser.content_security_policies[0].split(";"):
+            parts = directive.strip().split()
+            if parts:
+                directives[parts[0]] = parts[1:]
+
+        self.assertEqual(directives.get("default-src"), ["'none'"])
+        self.assertEqual(directives.get("base-uri"), ["'none'"])
+        self.assertEqual(directives.get("form-action"), ["'none'"])
+        self.assertEqual(directives.get("frame-src"), ["'none'"])
+        self.assertEqual(directives.get("object-src"), ["'none'"])
+        self.assertEqual(directives.get("script-src"), ["'self'"])
+        self.assertEqual(directives.get("img-src"), ["'self'"])
+        self.assertIn("'self'", directives.get("style-src", []))
+        self.assertIn("https://fonts.googleapis.com", directives.get("style-src", []))
+        self.assertEqual(directives.get("font-src"), ["https://fonts.gstatic.com"])
+        self.assertEqual(
+            set(directives.get("connect-src", [])),
+            {"https://fonts.googleapis.com", "https://fonts.gstatic.com"},
         )
 
     def test_mobile_navigation_has_accessible_control_relationship(self):
